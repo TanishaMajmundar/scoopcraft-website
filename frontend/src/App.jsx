@@ -1,39 +1,47 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import FlavorCard from "./components/FlavorCard";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import ProductList from './pages/ProductList';
+import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Orders from './pages/Orders';
+import './index.css';
 
-function App() {
-
-  const [flavors, setFlavors] = useState([]);
-
-  useEffect(() => {
-
-    const fetchFlavors = async () => {
-      const res = await axios.get("http://localhost:5000/api/flavors");
-      setFlavors(res.data);
-    };
-
-    fetchFlavors();
-
-  }, []);
-
+export default function App() {
   return (
-    <div className="bg-pink-50 min-h-screen p-10">
-
-      <h1 className="text-4xl font-bold text-center text-pink-600 mb-10">
-        ScoopCraft Flavors 🍦
-      </h1>
-
-      <div className="flex flex-wrap gap-6 justify-center">
-
-        {flavors.map((flavor) => (
-          <FlavorCard key={flavor._id} flavor={flavor} />
-        ))}
-
-      </div>
-
-    </div>
+    <AppProvider>
+      <BrowserRouter>
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="*" element={
+              <div style={{ textAlign: 'center', padding: '100px 20px' }}>
+                <div style={{ fontSize: '5rem' }}>🍦</div>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', marginTop: '20px' }}>Oops! Page not found</h2>
+                <p style={{ color: 'var(--text-light)', marginTop: '10px' }}>Let's go back to the sweet stuff.</p>
+                <a href="/" style={{ display: 'inline-block', marginTop: '20px' }}>
+                  <button className="btn-primary">Go Home 🏠</button>
+                </a>
+              </div>
+            } />
+          </Routes>
+        </main>
+        <Footer />
+      </BrowserRouter>
+    </AppProvider>
   );
 }
-
-export default App;
